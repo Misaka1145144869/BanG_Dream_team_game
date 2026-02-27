@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⭐邦邦拼好组🎸</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            color: #ffcc00;
+        }
+        
+        .instructions {
+            font-size: 1.2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .left-panel {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            max-width: 800px;
+        }
+        
+        .right-panel {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            max-width: 1000px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #ffcc00;
+            text-align: center;
+        }
+        
+        .characters-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            gap: 12px;
+        }
+        
+        .character {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 2px solid #444;
+            border-radius: 10px;
+            cursor: grab;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            background: linear-gradient(145deg, #2c3e50, #1a2530);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .character:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+            border-color: #ffcc00;
+        }
+        
+        .character img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .groups-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .group {
+            background: rgba(50, 50, 50, 0.7);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            border: 1px solid #555;
+        }
+        
+        .group-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .group-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .group-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .music-btn {
+            background: #ff3b72;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s, transform 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .music-btn:hover {
+            background: #eb5ea0;
+            transform: scale(1.1);
+        }
+        
+        .music-btn.playing {
+            background: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .slots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .slot {
+            width: 80px;
+            height: 80px;
+            border: 2px dashed #777;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .slot.highlight {
+            border: 2px solid #2ecc71;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+        }
+        
+        .slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        .group-icon {
+            max-height: 214px;
+            max-width: 448px;
+        }
+        
+        .group-icon img {
+            height: 100%;
+            width: auto;
+            max-height: 80px;
+            border-radius: 5px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .action-btn {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(to right, #3498db, #2980b9);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #2c3e50, #1a2530);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.5);
+            border: 2px solid #ffcc00;
+        }
+        
+        .modal h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .result-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .result-group {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .result-group h3 {
+            margin-bottom: 8px;
+            min-width: 80px;
+            font-size: 1.1rem;
+        }
+        
+        .result-slots {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .result-slot {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            background-size: cover;
+            font-size: 0.9rem;
+        }
+        
+        .correct {
+            border: 3px solid #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.7);
+        }
+        
+        .incorrect {
+            border: 3px solid #e74c3c;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+        }
+        
+        .close-btn {
+            margin-top: 25px;
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .score-display {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            color: #ffcc00;
+        }
+        
+        .drag-over {
+            background-color: rgba(46, 204, 113, 0.4) !important;
+            border: 2px solid #2ecc71 !important;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1600px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .left-panel, .right-panel {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .characters-container {
+                grid-template-columns: repeat(5, 1fr);
+                grid-template-rows: repeat(10, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .group {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .slots {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .group-icon {
+                max-height: 60px;
+            }
+            
+            .group-icon img {
+                max-height: 60px;
+            }
+            
+            .slot {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .group-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⭐邦邦拼好组🎸</h1>
+        <p class="instructions">按照你的直觉，把左边的邦邦角色分别填入右面的乐队（注意职位哦），按音乐按钮可以播放该组的歌曲。。！</p>
+    </header>
+    
+    <div class="container">
+        <div class="left-panel">
+            <h2 class="section-title">待分组角色</h2>
+            <div class="characters-container" id="characters-container">
+                <!-- 角色将通过JS动态生成 -->
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <h2 class="section-title">分组区域</h2>
+            <div class="groups-container" id="groups-container">
+                <!-- 分组将通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button class="action-btn reset-btn" id="reset-btn">
+            <span>重置游戏</span>
+        </button>
+        <button class="action-btn submit-btn" id="submit-btn">
+            <span>提交答案</span>
+        </button>
+    </div>
+    
+    <div class="modal" id="result-modal">
+        <div class="modal-content">
+            <h2>分组结果</h2>
+            <div class="score-display" id="score-display">
+                <!-- 分数将通过JS动态生成 -->
+            </div>
+            <div class="result-container" id="result-container">
+                <!-- 结果将通过JS动态生成 -->
+            </div>
+            <button class="close-btn" id="close-btn">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 游戏数据
+            const groups = [
+                { 
+                    id: 1, 
+                    name: "Poppin'Party", 
+                    titleColor: "#FF3377",
+                    music: "https://bestdori.com/assets/jp/sound/bgm158_rip/bgm158.mp3", 
+                    icon: "https://bestdori.com/assets/jp/band/logo/001_rip/logoL.png",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/bass.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/gnv.png",
+                        "Assets/Bandori/yueqi/key.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                },
+                { 
+                    id: 2, 
+                    name: "Afterglow", 
+                    titleColor: "#EE3344",
+                    music: "https://bestdori.com/assets/jp/sound/bgm093_rip/bgm093.mp3", 
+                    icon: "https://bestdori.com/assets/jp/band/logo/002_rip/logoL.png",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/bass.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/gnv.png",
+                        "Assets/Bandori/yueqi/key.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                },
+                { 
+                    id: 3, 
+                    name: "Pastel*Palettes", 
+                    titleColor: "#33DDAA",
+                    music: "https://bestdori.com/assets/jp/sound/bgm032_rip/bgm032.mp3", 
+                    icon: "https://bestdori.com/assets/jp/band/logo/004_rip/logoL.png",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/bass.png",
+                        "Assets/Bandori/yueqi/key.png",
+                        "Assets/Bandori/yueqi/vo.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                },
+                { 
+                    id: 4, 
+                    name: "Roselia", 
+                    titleColor: "#3344AA",
+                    music: "https://bestdori.com/assets/jp/sound/bgm031_rip/bgm031.mp3", 
+                    icon: "https://bestdori.com/assets/jp/band/logo/005_rip/logoL.png",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/bass.png",
+                        "Assets/Bandori/yueqi/key.png",
+                        "Assets/Bandori/yueqi/vo.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                },
+                { 
+                    id: 5, 
+                    name: "Hello! Happy World! ", 
+                    titleColor: "#FFDD00",
+                    music: "https://bestdori.com/assets/jp/sound/bgm037_rip/bgm037.mp3", 
+                    icon: "https://bestdori.com/assets/jp/band/logo/003_rip/logoL.png",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/bass.png",
+                        "Assets/Bandori/yueqi/dj.png",
+                        "Assets/Bandori/yueqi/vo.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                },
+                { 
+                    id: 6, 
+                    name: "Morfonica", 
+                    titleColor: "#33AAFF",
+                    music: "https://bestdori.com/assets/jp/sound/bgm255_rip/bgm255.mp3", 
+                    icon: "https://bestdori.com/assets/jp/band/logo/021_rip/logoL.png",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/bass.png",
+                        "Assets/Bandori/yueqi/volin.png",
+                        "Assets/Bandori/yueqi/vo.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                },
+                { 
+                    id: 7, 
+                    name: "RAISE A SUILEN", 
+                    titleColor: "#33CCCC",
+                    music: "https://bestdori.com/assets/jp/sound/bgm247_rip/bgm247.mp3", 
+                    icon: "https://bestdori.com/assets/jp/band/logo/018_rip/logoL.png",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/key.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/bnv.png",
+                        "Assets/Bandori/yueqi/dj.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                },
+                { 
+                    id: 8, 
+                    name: "MyGO!!!!!", 
+                    titleColor: "#3388BB",
+                    music: "https://bestdori.com/assets/jp/sound/bgm512_rip/bgm512.mp3", 
+                    icon: "https://bestdori.com/assets/jp/band/logo/045_rip/logoL.png",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/guitar_r.png",
+                        "Assets/Bandori/yueqi/bass.png",
+                        "Assets/Bandori/yueqi/vo.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                },
+                { 
+                    id: 9, 
+                    name: "Ave Mujica", 
+                    titleColor: "#881144",
+                    music: "https://bestdori.com/assets/jp/sound/bgm531_rip/bgm531.mp3", 
+                    icon: "https://storage.moegirl.org.cn/moegirl/commons/8/84/Ave_Mujica_logo_real1.png?download",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/key.png",
+                        "Assets/Bandori/yueqi/bass.png",
+                        "Assets/Bandori/yueqi/gnv.png",
+                        "Assets/Bandori/yueqi/dr.png",
+                        "Assets/Bandori/yueqi/guitar_r.png"
+                    ]
+                },
+                { 
+                    id: 10, 
+                    name: "梦限大MewType", 
+                    titleColor: "#FF7788",
+                    music: "https://assets.mixkit.co/music/preview/mixkit-tribal-drums-579.mp3", 
+                    icon: "https://storage.moegirl.org.cn/moegirl/commons/9/9e/Yumemita_logo.png?download",
+                    slotBackgrounds: [
+                        "Assets/Bandori/yueqi/guitar_r.png",
+                        "Assets/Bandori/yueqi/dj.png",
+                        "Assets/Bandori/yueqi/vo.png",
+                        "Assets/Bandori/yueqi/key.png",
+                        "Assets/Bandori/yueqi/guitar_m.png"
+                    ]
+                }
+            ];
+            
+            // 正确答案映射（组ID => 位置索引 => 角色ID）
+            const correctAnswers = {
+                1: {0: 1, 1: 2, 2: 3, 3: 4, 4: 5},
+                2: {0: 6, 1: 7, 2: 8, 3: 9, 4: 10},
+                3: {0: 11, 1: 12, 2: 13, 3: 14, 4: 15},
+                4: {0: 16, 1: 17, 2: 18, 3: 19, 4: 20},
+                5: {0: 21, 1: 22, 2: 23, 3: 24, 4: 25},
+                6: {0: 26, 1: 27, 2: 28, 3: 29, 4: 30},
+                7: {0: 31, 1: 32, 2: 33, 3: 34, 4: 35},
+                8: {0: 36, 1: 37, 2: 38, 3: 39, 4: 40},
+                9: {0: 41, 1: 42, 2: 43, 3: 44, 4: 45},
+                10: {0: 46, 1: 47, 2: 48, 3: 49, 4: 50}
+            };
+            
+            // 当前分组状态
+            const groupState = {};
+            groups.forEach(group => {
+                groupState[group.id] = {0: null, 1: null, 2: null, 3: null, 4: null};
+            });
+            
+            // 当前播放的音乐
+            let currentAudio = null;
+            let currentPlayingButton = null;
+            
+            // 初始化游戏
+            function initGame() {
+                initCharacters();
+                initGroups();
+                initEventListeners();
+            }
+            
+            // 初始化角色区域（打乱顺序）
+            function initCharacters() {
+                const container = document.getElementById('characters-container');
+                container.innerHTML = '';
+                
+                // 创建角色ID数组并打乱顺序
+                let characterIds = Array.from({length: 50}, (_, i) => i + 1);
+                characterIds = shuffleArray(characterIds);
+                
+                for (let i = 0; i < 50; i++) {
+                    const characterId = characterIds[i];
+                    const character = document.createElement('div');
+                    character.className = 'character';
+                    character.draggable = true;
+                    character.id = `character-${characterId}`;
+                    character.setAttribute('data-id', characterId);
+                    
+                    // 使用背景图片或数字
+                    const img = document.createElement('img');
+                    img.src = `Assets/bandori/characters/${characterId}.png`;
+                    img.alt = `角色 ${characterId}`;
+                    img.onerror = function() {
+                        this.style.display = 'none';
+                        character.textContent = characterId;
+                    };
+                    
+                    character.appendChild(img);
+                    
+                    // 添加拖拽事件
+                    character.addEventListener('dragstart', dragStart);
+                    
+                    container.appendChild(character);
+                }
+            }
+            
+            // 打乱数组顺序
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+            
+            // 初始化分组区域
+            function initGroups() {
+                const container = document.getElementById('groups-container');
+                container.innerHTML = '';
+                
+                groups.forEach(group => {
+                    const groupElem = document.createElement('div');
+                    groupElem.className = 'group';
+                    groupElem.id = `group-${group.id}`;
+                    
+                    // 组内容（标题、音乐按钮和槽位）
+                    const groupContent = document.createElement('div');
+                    groupContent.className = 'group-content';
+                    
+                    // 组标题和音乐按钮
+                    const groupHeader = document.createElement('div');
+                    groupHeader.className = 'group-header';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'group-title';
+                    title.textContent = group.name;
+                    title.style.color = group.titleColor;
+                    
+                    const musicBtn = document.createElement('button');
+                    musicBtn.className = 'music-btn';
+                    musicBtn.innerHTML = '♪';
+                    musicBtn.setAttribute('data-group', group.id);
+                    musicBtn.title = `播放${group.name}的音乐`;
+                    
+                    groupHeader.appendChild(title);
+                    groupHeader.appendChild(musicBtn);
+                    
+                    // 槽位
+                    const slots = document.createElement('div');
+                    slots.className = 'slots';
+                    
+                    for (let i = 0; i < 5; i++) {
+                        const slot = document.createElement('div');
+                        slot.className = 'slot';
+                        slot.id = `group-${group.id}-slot-${i}`;
+                        slot.setAttribute('data-group', group.id);
+                        slot.setAttribute('data-slot', i);
+                        
+                        // 设置背景图片
+                        if (group.slotBackgrounds && group.slotBackgrounds[i]) {
+                            slot.style.backgroundImage = `url('${group.slotBackgrounds[i]}')`;
+                        }
+                        
+                        // 添加拖放事件
+                        slot.addEventListener('dragover', dragOver);
+                        slot.addEventListener('dragenter', dragEnter);
+                        slot.addEventListener('dragleave', dragLeave);
+                        slot.addEventListener('drop', drop);
+                        
+                        slots.appendChild(slot);
+                    }
+                    
+                    groupContent.appendChild(groupHeader);
+                    groupContent.appendChild(slots);
+                    
+                    // 组图标
+                    const groupIcon = document.createElement('div');
+                    groupIcon.className = 'group-icon';
+                    
+                    const iconImg = document.createElement('img');
+                    iconImg.src = group.icon;
+                    iconImg.alt = `${group.name}图标`;
+                    iconImg.onerror = function() {
+                        this.style.display = 'none';
+                        groupIcon.textContent = group.name;
+                    };
+                    
+                    groupIcon.appendChild(iconImg);
+                    
+                    groupElem.appendChild(groupContent);
+                    groupElem.appendChild(groupIcon);
+                    
+                    container.appendChild(groupElem);
+                });
+            }
+            
+            // 初始化事件监听
+            function initEventListeners() {
+                // 音乐按钮
+                document.querySelectorAll('.music-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const groupId = this.getAttribute('data-group');
+                        playGroupMusic(groupId, this);
+                    });
+                });
+                
+                // 提交按钮
+                document.getElementById('submit-btn').addEventListener('click', submitAnswers);
+                
+                // 重置按钮
+                document.getElementById('reset-btn').addEventListener('click', resetGame);
+                
+                // 关闭结果窗口按钮
+                document.getElementById('close-btn').addEventListener('click', function() {
+                    document.getElementById('result-modal').style.display = 'none';
+                });
+            }
+            
+            // 拖拽开始
+            function dragStart(e) {
+                // 确保获取的是character元素，而不是其子元素
+                const character = e.target.closest('.character');
+                if (character) {
+                    e.dataTransfer.setData('text/plain', character.getAttribute('data-id'));
+                    e.dataTransfer.effectAllowed = 'move';
+                }
+            }
+            
+            // 拖拽经过
+            function dragOver(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            }
+            
+            // 拖拽进入
+            function dragEnter(e) {
+                e.preventDefault();
+                // 使用currentTarget确保添加样式到slot本身
+                e.currentTarget.classList.add('drag-over');
+            }
+            
+            // 拖拽离开
+            function dragLeave(e) {
+                e.currentTarget.classList.remove('drag-over');
+            }
+            
+            // 放置
+            function drop(e) {
+                e.preventDefault();
+                const slot = e.currentTarget; // 获取绑定事件的slot元素
+                slot.classList.remove('drag-over');
+                
+                const groupId = slot.getAttribute('data-group');
+                const slotId = slot.getAttribute('data-slot');
+                const characterId = e.dataTransfer.getData('text/plain');
+                
+                if (!groupId || !slotId || !characterId) return;
+                
+                // 如果槽位已有角色，将其移回角色区域
+                if (slot.hasChildNodes()) {
+                    const existingCharacter = slot.firstChild;
+                    const existingCharId = existingCharacter.getAttribute('data-id');
+                    
+                    // 更新分组状态
+                    groupState[groupId][slotId] = null;
+                    
+                    // 将角色移回角色区域
+                    document.getElementById('characters-container').appendChild(existingCharacter);
+                }
+                
+                // 更新分组状态
+                groupState[groupId][slotId] = parseInt(characterId);
+                
+                // 获取原始角色元素
+                const originalCharacter = document.getElementById(`character-${characterId}`);
+                if (!originalCharacter) return;
+                
+                // 创建角色元素副本
+                const characterClone = originalCharacter.cloneNode(true);
+                characterClone.setAttribute('data-id', characterId);
+                
+                // 清空槽位并添加角色
+                slot.innerHTML = '';
+                slot.appendChild(characterClone);
+                
+                // 添加拖拽事件到克隆的元素
+                characterClone.addEventListener('dragstart', dragStart);
+                
+                // 从原始区域移除角色
+                originalCharacter.parentNode.removeChild(originalCharacter);
+            }
+            
+            // 播放分组音乐
+            function playGroupMusic(groupId, button) {
+                // 停止当前播放的音乐
+                if (currentAudio) {
+                    currentAudio.pause();
+                    if (currentPlayingButton) {
+                        currentPlayingButton.classList.remove('playing');
+                    }
+                }
+                
+                // 找到对应的分组
+                const group = groups.find(g => g.id == groupId);
+                if (!group) return;
+                
+                currentAudio = new Audio(group.music);
+                
+                currentAudio.play().catch(error => {
+                    console.log('音乐播放失败:', error);
+                    alert(`无法播放 ${group.name} 的音乐，请检查音乐文件路径。`);
+                });
+                
+                // 更新UI
+                button.classList.add('playing');
+                currentPlayingButton = button;
+                
+                // 音乐结束时更新UI
+                currentAudio.onended = function() {
+                    button.classList.remove('playing');
+                    currentPlayingButton = null;
+                };
+            }
+            
+            // 提交答案
+            function submitAnswers() {
+                const results = {};
+                let allFilled = true;
+                let correctCount = 0;
+                let totalCount = 0;
+                
+                // 验证所有槽位是否已填
+                for (const groupId in groupState) {
+                    results[groupId] = {};
+                    
+                    for (const slotId in groupState[groupId]) {
+                        const characterId = groupState[groupId][slotId];
+                        
+                        if (characterId === null) {
+                            allFilled = false;
+                            break;
+                        }
+                        
+                        totalCount++;
+                        
+                        // 检查答案是否正确
+                        const isCorrect = correctAnswers[groupId][slotId] === characterId;
+                        if (isCorrect) correctCount++;
+                        
+                        results[groupId][slotId] = {
+                            characterId: characterId,
+                            isCorrect: isCorrect
+                        };
+                    }
+                    
+                    if (!allFilled) break;
+                }
+                
+                if (!allFilled) {
+                    alert('请确保所有分组位置都已填满！');
+                    return;
+                }
+                
+                // 显示结果
+                showResults(results, correctCount, totalCount);
+            }
+            
+            // 显示结果
+            function showResults(results, correctCount, totalCount) {
+                const resultContainer = document.getElementById('result-container');
+                resultContainer.innerHTML = '';
+                
+                const scoreDisplay = document.getElementById('score-display');
+                scoreDisplay.textContent = `得分: ${correctCount}/${totalCount} (${Math.round((correctCount/totalCount)*100)}%)`;
+                
+                groups.forEach(group => {
+                    const groupResult = document.createElement('div');
+                    groupResult.className = 'result-group';
+                    
+                    const groupTitle = document.createElement('h3');
+                    groupTitle.textContent = group.name;
+                    groupTitle.style.color = group.titleColor;
+                    
+                    const resultSlots = document.createElement('div');
+                    resultSlots.className = 'result-slots';
+                    
+                    for (let slotId = 0; slotId < 5; slotId++) {
+                        const result = results[group.id][slotId];
+                        const slotResult = document.createElement('div');
+                        slotResult.className = `result-slot ${result.isCorrect ? 'correct' : 'incorrect'}`;
+                        
+                        const character = document.createElement('div');
+                        character.textContent = result.characterId;
+                        
+                        slotResult.appendChild(character);
+                        resultSlots.appendChild(slotResult);
+                    }
+                    
+                    groupResult.appendChild(groupTitle);
+                    groupResult.appendChild(resultSlots);
+                    resultContainer.appendChild(groupResult);
+                });
+                
+                document.getElementById('result-modal').style.display = 'flex';
+            }
+            
+            // 重置游戏
+            function resetGame() {
+                // 停止音乐
+                if (currentAudio) {
+                    currentAudio.pause();
+                    if (currentPlayingButton) {
+                        currentPlayingButton.classList.remove('playing');
+                    }
+                }
+                
+                // 重置分组状态
+                groups.forEach(group => {
+                    groupState[group.id] = {0: null, 1: null, 2: null, 3: null, 4: null};
+                });
+                
+                // 重新初始化角色和分组
+                initCharacters();
+                initGroups();
+                initEventListeners();
+            }
+            
+            // 初始化游戏
+            initGame();
+        });
+    </script>
+</body>
+</html>
